@@ -57,7 +57,7 @@ class county:
 
 def get_data(fips, date):
     JH_County_Data = pd.read_csv(
-        'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/' + date + '.csv')
+        'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/' + date + '.csv', sep=",")
     info = JH_County_Data[(JH_County_Data["FIPS"] == fips)].values.tolist()
     # print("info from get data:" + str(info))
     return info
