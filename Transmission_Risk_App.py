@@ -399,7 +399,7 @@ st.sidebar.write(total_face_mask_efficiency)
 
 zip_codes_data = pd.read_csv('zip_codes.csv')
 population_data = pd.read_csv('county_population_estimate.csv', encoding='latin-1')
-timeDelta = datetime.timedelta(1)
+timeDelta = datetime.timedelta(2)
 now = datetime.datetime.now() - timeDelta
 dateString = now.strftime("%m-%d-%Y")
 # creating the community and establishment objects
