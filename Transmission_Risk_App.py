@@ -3,8 +3,7 @@ import pandas as pd
 import datetime
 import math
 import plotly.express as px
-
-
+from PIL import Image
 
 
 class county:
@@ -57,7 +56,8 @@ class county:
 
 def get_data(fips, date):
     JH_County_Data = pd.read_csv(
-        'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/' + date + '.csv', sep=",")
+        'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/' + date + '.csv')
+
     info = JH_County_Data[(JH_County_Data["FIPS"] == fips)].values.tolist()
     # print("info from get data:" + str(info))
     return info
@@ -295,13 +295,13 @@ st.markdown("""
     background-image: linear-gradient(180deg, #2af598 0%, #009efd 100%);
     background-color: #8FC1E3;
   }
-
+/*
  .css-1aumxhk {
     background-color: #5085A5;
     background-image: none;
     color: #111; 
 }
-/*
+
 .css-145kmo2 {
     font-size: 0.8rem;
     color: #fff;
@@ -316,9 +316,10 @@ st.markdown("""
 */
 </style>
  """, unsafe_allow_html=True)
-#6b9de3
-#011839
+# 6b9de3
+# 011839
 st.header("This web app uses probabilistic modeling to predict the transmission risk when visiting a venue.")
+
 st.markdown(
     '''
     Please Enter your Event-Related, Venue-Related, and Personal factors on the side bar to the left. Explanations for each factor are given. Web app created by Daiwik Pal. 
@@ -372,8 +373,8 @@ with st.sidebar.beta_expander("More Information", False):
     ''')
 
 st.sidebar.subheader("Venue Related Factors:")
-room_area = st.sidebar.number_input('Enter Room Area in Squared Meters', 0)
-room_height = st.sidebar.number_input('Enter Room Height in Meters', 0)
+room_area = st.sidebar.number_input('Enter Room Area in Squared Feet', 0) * 0.0929
+room_height = st.sidebar.number_input('Enter Room Height in Feet', 0) * 0.3048
 room_ventilation_radio = st.sidebar.radio('Room Ventilation', ["No Ventilation", "Some Ventilation", "Public Area"])
 
 if room_ventilation_radio == "No Ventilation":
@@ -424,13 +425,13 @@ if run_button:
         st.success("***Predicted Risk: VERY LOW***")
     elif 11 < r_transmission < 30:
         st.success("***Predicted Risk: LOW***")
-    elif 31 < r_transmission < 60:
+    elif 30 < r_transmission < 60:
         st.warning("***Predicted Risk: MEDIUM***")
-    elif 61 < r_transmission < 70:
+    elif 60 < r_transmission < 70:
         st.error("***Predicted Risk: HIGH***")
-    elif 71 < r_transmission < 85:
+    elif 70 < r_transmission < 85:
         st.error("***Predicted Risk: VERY HIGH***")
-    elif 86 < r_transmission <= 100:
+    elif 85 < r_transmission <= 100:
         st.error("***Predicted Risk: EXTREME***")
     # st.beta_expander()
     st.write("Predicted Transmission Risk: " + str(round(r_transmission * 100) / 100))
@@ -440,7 +441,6 @@ st.write(
     "This section will help you contextualize the transmission risk prediction you received based on varied venue population sizes.")
 
 Graph_button = st.button("Generate Graph:")
-
 
 if Graph_button:
     if not zipcode or not (zipcode.isnumeric()) or room_area == 0 or room_height == 0:
@@ -452,29 +452,32 @@ if Graph_button:
                           mean_wet_aerosol_diameter, virus_lifetime_in_aerosol, infectious_episode, room_area,
                           room_height, room_ventilation_rate, total_face_mask_efficiency)
     data = {
-        'Transmission_Risk': [],
-        'Population': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 300, 400,  500, 600, 700, 800, 900, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 10000, 50000, 70000, 100000, susceptible_number_persons]
+        'Transmission Risk': [],
+        'Population': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 300, 400, 500, 600, 700,
+                       800, 900, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 10000, 50000, 70000, 100000,
+                       susceptible_number_persons]
     }
 
     my_bar = st.progress(0)
     progress_var = 0
     for i in range(0, len(data['Population'])):
-        data['Transmission_Risk'].append(transmission_risk(community, establishment, data['Population'][i], duration))
+        data['Transmission Risk'].append(transmission_risk(community, establishment, data['Population'][i], duration))
         my_bar.progress((i + 1) / len(data['Population']))
 
     df = pd.DataFrame(data=data)
 
-    fig = px.scatter(df, x='Population', y='Transmission_Risk', log_x=True, range_x=[1, 100000], range_y=[0, 110])
+    fig = px.scatter(df, x='Population', y='Transmission Risk', log_x=True, range_x=[1, 100000], range_y=[0, 110])
+
+    fig.add_hrect(y0=0, y1=30, line_width=0, fillcolor="green", opacity=0.2)
+    fig.add_hrect(y0=30, y1=60, line_width=0, fillcolor="yellow", opacity=0.2)
+    fig.add_hrect(y0=60, y1=100, line_width=0, fillcolor="red", opacity=0.2)
+
+
     st.plotly_chart(fig, use_container_width=True)
     with st.beta_expander('More Information:'):
         st.table(data)
 
-
-
-with st.beta_expander("How does the Transmission Risk Model work?", False):
-    st.write('''
-    #### This is where the explanations with latex equations and stuff will go
-    ''')
-
-
-
+# with st.beta_expander("How does the Transmission Risk Model work?", False):
+# st.write('''
+# #### This is where the explanations with latex equations and stuff will go
+# ''')
