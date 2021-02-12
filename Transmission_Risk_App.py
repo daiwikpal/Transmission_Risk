@@ -423,15 +423,15 @@ if run_button:
 
     if 0 <= r_transmission < 10:
         st.success("***Predicted Risk: VERY LOW***")
-    elif 11 < r_transmission < 30:
+    elif 10 <= r_transmission < 30:
         st.success("***Predicted Risk: LOW***")
-    elif 30 < r_transmission < 60:
+    elif 30 <= r_transmission < 60:
         st.warning("***Predicted Risk: MEDIUM***")
-    elif 60 < r_transmission < 70:
+    elif 60 <= r_transmission < 70:
         st.error("***Predicted Risk: HIGH***")
-    elif 70 < r_transmission < 85:
+    elif 70 <= r_transmission < 85:
         st.error("***Predicted Risk: VERY HIGH***")
-    elif 85 < r_transmission <= 100:
+    elif 85 <= r_transmission <= 100:
         st.error("***Predicted Risk: EXTREME***")
     # st.beta_expander()
     st.write("Predicted Transmission Risk: " + str(round(r_transmission * 100) / 100))
