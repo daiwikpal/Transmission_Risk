@@ -295,6 +295,7 @@ st.markdown("""
     background-image: linear-gradient(180deg, #2af598 0%, #009efd 100%);
     background-color: #8FC1E3;
   }
+  .sidebar .sidebar-content {{width: 500px;}}
 /*
  .css-1aumxhk {
     background-color: #5085A5;
@@ -325,40 +326,15 @@ st.markdown(
     Please Enter your Event-Related, Venue-Related, and Personal factors on the side bar to the left. Explanations for each factor are given. Web app created by Daiwik Pal. 
     '''
 )
-
-# Covid - 19 related information
-RNA_50_percent = 316
-deposition_probability = 0.5
-emission_breathing = 0.06
-emission_speaking = 0.6
-
-respiratory_rate = 10
-respiratory_fluid_RNA_conc = 5.00 * pow(10, 8)
-mean_wet_aerosol_diameter = 5
-virus_lifetime_in_aerosol = 1.7
-infectious_episode = 2
-# vars that will change
-
-# venue releated factor(s):
-room_area = 100
-room_height = 4
-room_ventilation_rate = 2
-
-# event releated factor(s)
-susceptible_number_persons = 20
-duration = 9
-speaking_breathing_ratio = 0.6
-
-# personal factor(s)
-total_face_mask_efficiency = 0
-
-zipcode = st.sidebar.text_input('What is your zipcode?')
-
+st.sidebar.header("1) Enter Factors")
+st.sidebar.header("Venue 1")
+zipcode = st.sidebar.text_input("What is Venue 1's zipcode?")
 st.sidebar.subheader('Event Related Factors:')
-susceptible_number_persons = st.sidebar.number_input('How many people will be at the venue?', 0)
-duration = st.sidebar.number_input('How long will you attend the venue? (Hours)')
-speaking_breathing_ratio = st.sidebar.slider("What percentage of the time during your visit do you expect to speak?", 1,
-                                             100, 0) / 100
+susceptible_number_persons = st.sidebar.number_input('Venue 1: How many people will be at the venue?', 0)
+duration = st.sidebar.number_input('Venue 1: How long will yo attend the venue? (Hours)')
+speaking_breathing_ratio = st.sidebar.slider(
+    "Venue 1: What percentage of the time during your visit do you expect to speak?", 1,
+    100, 0) / 100
 st.sidebar.write(round(speaking_breathing_ratio * 100))
 with st.sidebar.beta_expander("More Information", False):
     st.write('''
@@ -373,9 +349,10 @@ with st.sidebar.beta_expander("More Information", False):
     ''')
 
 st.sidebar.subheader("Venue Related Factors:")
-room_area = st.sidebar.number_input('Enter Room Area in Squared Feet', 0) * 0.0929
-room_height = st.sidebar.number_input('Enter Room Height in Feet', 0) * 0.3048
-room_ventilation_radio = st.sidebar.radio('Room Ventilation', ["No Ventilation", "Some Ventilation", "Public Area"])
+
+room_area = st.sidebar.number_input('Venue 1: Enter Room Area in Squared Feet', 0) * 0.0929
+room_height = st.sidebar.number_input('Venue 1: Enter Room Height in Feet', 0) * 0.3048
+room_ventilation_radio = st.sidebar.radio('Venue 1: Room Ventilation', ["No Ventilation", "Some Ventilation", "Public Area"])
 
 if room_ventilation_radio == "No Ventilation":
     room_ventilation_rate = 0
@@ -386,8 +363,9 @@ else:
 st.sidebar.write(room_ventilation_rate)
 
 st.sidebar.subheader("Personal Factors")
-total_face_mask_efficiency_radio = st.sidebar.radio("What mask will you be using?",
-                                                    ["No Mask", "Normal Mask", "Surgical Mask"])
+
+total_face_mask_efficiency_radio = st.sidebar.radio("Venue 1: What mask will you be using?",
+                                            ["No Mask", "Normal Mask", "Surgical Mask"])
 
 if total_face_mask_efficiency_radio == "No Mask":
     total_face_mask_efficiency = 0
@@ -398,6 +376,68 @@ else:
 
 st.sidebar.write(total_face_mask_efficiency)
 
+#venue 2
+st.sidebar.header("Venue 2")
+v2_zipcode = st.sidebar.text_input("What is Venue 2's zipcode?")
+
+st.sidebar.subheader('Event Related Factors:')
+v2_susceptible_number_persons = st.sidebar.number_input('Venue 2: How many people will be at the venue?', 0)
+v2_duration = st.sidebar.number_input('Venue 2: How long will yo attend the venue? (Hours)')
+v2_speaking_breathing_ratio = st.sidebar.slider(
+    "Venue 2: What percentage of the time during your visit do you expect to speak?", 1,
+    100, 0) / 100
+st.sidebar.write(round(v2_speaking_breathing_ratio * 100))
+with st.sidebar.beta_expander("More Information", False):
+    st.write('''
+    #### Total Number of People: 
+    The total number of people at the venue is used when calculating the risk that an individual might get exposed to a carrier of the virus (*Exposure Risk*). 
+
+    #### Duration: 
+    The longer one stays at the venue the more chance they have of meeting a carrier and more dosis they inhale. In these trying times it is best to visit a venue for as short of a time as possible. 
+
+    #### Speaking Ratio: 
+    This factor is used to determine the the number or dosis of the virus you may inhale during your visit. When speaking, individuals tend to inhale aerosols, which is why is it is used to calculate the total dosage inhaled the visit. 
+    ''')
+
+st.sidebar.subheader("Venue Related Factors:")
+v2_room_area = st.sidebar.number_input('Venue 2: Enter Room Area in Squared Feet', 0) * 0.0929
+v2_room_height = st.sidebar.number_input('Venue 2: Enter Room Height in Feet', 0) * 0.3048
+v2_room_ventilation_radio = st.sidebar.radio('Venue 2: Room Ventilation', ["No Ventilation", "Some Ventilation", "Public Area"])
+
+if v2_room_ventilation_radio == "No Ventilation":
+    v2_room_ventilation_rate = 0
+elif v2_room_ventilation_radio == "Some Ventilation":
+    v2_room_ventilation_rate = 2
+else:
+    v2_room_ventilation_rate = 6
+st.sidebar.write(v2_room_ventilation_rate)
+
+st.sidebar.subheader("Personal Factors")
+v2_total_face_mask_efficiency_radio = st.sidebar.radio("Venue 2: What mask will you be using?",
+                                            ["No Mask", "Normal Mask", "Surgical Mask"])
+
+if v2_total_face_mask_efficiency_radio == "No Mask":
+    v2_total_face_mask_efficiency = 0
+elif v2_total_face_mask_efficiency_radio == "Normal Mask":
+    v2_total_face_mask_efficiency = 0.2
+else:
+    v2_total_face_mask_efficiency = 0.5
+
+st.sidebar.write(v2_total_face_mask_efficiency)
+
+# Covid - 19 related information
+RNA_50_percent = 316
+deposition_probability = 0.5
+emission_breathing = 0.06
+emission_speaking = 0.6
+
+respiratory_rate = 10
+respiratory_fluid_RNA_conc = 5.00 * pow(10, 8)
+mean_wet_aerosol_diameter = 5
+virus_lifetime_in_aerosol = 1.7
+infectious_episode = 2
+# vars that will change
+
 zip_codes_data = pd.read_csv('zip_codes.csv')
 population_data = pd.read_csv('county_population_estimate.csv', encoding='latin-1')
 timeDelta = datetime.timedelta(2)
@@ -406,8 +446,8 @@ dateString = now.strftime("%m-%d-%Y")
 # creating the community and establishment objects
 
 # Calculate Transmission Risk Button (Individual)
-st.header("Calculate Transmission Risk:")
-run_button = st.button('Calculate Transmission Risk')
+st.header("2) Calculate and Compare Transmission Risk:")
+run_button = st.button('Calculate Transmission Risk for both venues')
 if run_button:
     if not zipcode or not (zipcode.isnumeric()) or room_area == 0 or room_height == 0:
         st.warning('Please enter a valid zipcode or provide a non-zero value for room dimensions!')
@@ -419,27 +459,56 @@ if run_button:
                           room_height, room_ventilation_rate, total_face_mask_efficiency)
     r_transmission = transmission_risk(community, establishment, susceptible_number_persons, duration)
 
-    st.subheader(community.get_name() + ", " + community.get_state())
+    community_v2 = county(zip_codes_data, population_data, v2_zipcode, dateString)
+    establishment_v2 = venue(RNA_50_percent, deposition_probability, emission_breathing, emission_speaking,
+                          v2_speaking_breathing_ratio, respiratory_rate, respiratory_fluid_RNA_conc,
+                          mean_wet_aerosol_diameter, virus_lifetime_in_aerosol, infectious_episode, v2_room_area,
+                          v2_room_height, v2_room_ventilation_rate, v2_total_face_mask_efficiency)
+    r_transmission_v2 = transmission_risk(community_v2, establishment_v2, v2_susceptible_number_persons, v2_duration)
 
-    if 0 <= r_transmission < 10:
-        st.success("***Predicted Risk: VERY LOW***")
-    elif 11 < r_transmission < 30:
-        st.success("***Predicted Risk: LOW***")
-    elif 30 < r_transmission < 60:
-        st.warning("***Predicted Risk: MEDIUM***")
-    elif 60 < r_transmission < 70:
-        st.error("***Predicted Risk: HIGH***")
-    elif 70 < r_transmission < 85:
-        st.error("***Predicted Risk: VERY HIGH***")
-    elif 85 < r_transmission <= 100:
-        st.error("***Predicted Risk: EXTREME***")
-    # st.beta_expander()
-    st.write("Predicted Transmission Risk: " + str(round(r_transmission * 100) / 100))
 
-st.header("Transmission Risk Comparison:")
+    col3, col4 = st.beta_columns(2)
+    with col3:
+        st.header("Venue1")
+        st.subheader(community.get_name() + ", " + community.get_state())
+        if 0 <= r_transmission <= 10:
+            st.success("***Predicted Risk: VERY LOW***")
+        elif 10 <= r_transmission <= 30:
+            st.success("***Predicted Risk: LOW***")
+        elif 30 <= r_transmission <= 60:
+            st.warning("***Predicted Risk: MEDIUM***")
+        elif 60 <= r_transmission <= 70:
+            st.error("***Predicted Risk: HIGH***")
+        elif 70 <= r_transmission <= 85:
+            st.error("***Predicted Risk: VERY HIGH***")
+        elif 85 <= r_transmission <= 100:
+            st.error("***Predicted Risk: EXTREME***")
+        # st.beta_expander()
+        st.write("Predicted Transmission Risk: " + str(round(r_transmission * 100) / 100))
+    with col4:
+        st.header("Venue2")
+        st.subheader(community_v2.get_name() + ", " + community_v2.get_state())
+        if 0 <= r_transmission_v2 <= 10:
+            st.success("***Predicted Risk: VERY LOW***")
+        elif 10 <= r_transmission_v2 <= 30:
+            st.success("***Predicted Risk: LOW***")
+        elif 30 <= r_transmission_v2 <= 60:
+            st.warning("***Predicted Risk: MEDIUM***")
+        elif 60 <= r_transmission_v2 <= 70:
+            st.error("***Predicted Risk: HIGH***")
+        elif 70 <= r_transmission_v2 <= 85:
+            st.error("***Predicted Risk: VERY HIGH***")
+        elif 85 <= r_transmission_v2 <= 100:
+            st.error("***Predicted Risk: EXTREME***")
+        # st.beta_expander()
+        st.write("Predicted Transmission Risk: " + str(round(r_transmission_v2 * 100) / 100))
+
+st.header("3) Transmission Risk Contextualization:")
 st.write(
     "This section will help you contextualize the transmission risk prediction you received based on varied venue population sizes.")
 
+option = st.selectbox('Pick a venue:',  ( 'Venue 1', 'Venue 2'))
+st.write('You selected:', option)
 Graph_button = st.button("Generate Graph:")
 
 if Graph_button:
@@ -457,6 +526,8 @@ if Graph_button:
                        800, 900, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 10000, 50000, 70000, 100000,
                        susceptible_number_persons]
     }
+
+
 
     my_bar = st.progress(0)
     progress_var = 0
